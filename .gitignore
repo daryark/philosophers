@@ -1,0 +1,5 @@
+.vscode
+/**/*.o
+/**/*.a
+philo
+a.out
