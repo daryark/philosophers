@@ -3,8 +3,10 @@ RE = \033[0m
 NAME = ./philo
 C_FLAGS = -Wall -Wextra -Werror -pthread
 
-SRC = philo.c
+SRC = philo.c utils.c
 OBJ_F = obj/
+SRC_F = src/
+VPATH = $(SRC_F)
 OBJ = $(addprefix $(OBJ_F), $(SRC:%.c=%.o))
 
 all: $(NAME)

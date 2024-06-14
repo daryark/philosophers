@@ -1,0 +1,56 @@
+//		Multi-Threaded Program
+//		| int x;		| int a;
+//		| x = 20;		| a = 3;
+//		| int y;		| int b;
+//		| y = 50;		| b = 5;
+//		| int sum;		| int product;
+//		| sum = x + y;	| product = a * b;
+//		↓ 				↓ 
+//
+//		Parallel execution!
+
+
+//		Multi-Threaded Program
+//		| int x;		|
+//		|				| int a;
+//		|				| a = 3;
+//		| x = 20;		|
+//		| int y;		|
+//		|				| int b;
+//      | y = 50;       |
+//		|       		| b = 5;
+//		|				| int product;
+//		| int sum;		|
+//		| sum = x + y;	|
+//		|				| product = a * b;
+//		↓ 				↓ 
+//
+//		Concurrent but not Parallel execution!
+
+
+//       Difference processes and threads:
+
+Processes can run in parallel as the new PID being created for each one.
+Threads are running in one process so they share the same PID.
+
+So they also share the state of the variables! and if don't do the mutex,
+they can happen to race and give the random result with this shared varialbe.
+Example:
+    fn ()
+    {
+        while (smth true)
+        {
+            //read var x
+            //increment var x + n
+            //write var back = x + n
+        }
+    }
+//  and if we have multiple threads to read x, then increment and they all write x+n in state.
+// if there was some async in timing, all multi threads will take for read the newer values of x
+// but if the timing is == for at least two of them, the overall result is unpredictable further!
+
+In processes its not a problem, as the run in different PIDs and they both have separate states
+and the variales to work inside one process are being copied automatically.
+
+In process we do wait() to wait child process in the parent.
+In threads we do pthread_join(waits for some thread end);
