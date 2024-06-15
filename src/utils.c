@@ -6,7 +6,7 @@
 /*   By: dyarkovs <dyarkovs@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/14 16:12:38 by dyarkovs          #+#    #+#             */
-/*   Updated: 2024/06/14 17:13:28 by dyarkovs         ###   ########.fr       */
+/*   Updated: 2024/06/14 23:03:53 by dyarkovs         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,8 +61,8 @@ int err_check(int ac, char **av)
         n = ft_atol(av[ac]);
         if (ac == 5 && n < 0)
             return (printf("Philosopher cannot eat less than 0 times\n"));
-        if (ac == 1 && !(n > 0 && n <= 200))
-            return (printf("Wrong amount of philosopers, enter value from 1 to 200\n"));
+        if (ac == 1 && n > 200)
+            return (printf("You should not run the program with more than 200 philosophers\n"));
         if (n <= 0 && ac != 5)
             return (printf("Values more than 0 accepted, but for the 5 param - can be 0\n"));
     }
