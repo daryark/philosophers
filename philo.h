@@ -6,7 +6,7 @@
 /*   By: dyarkovs <dyarkovs@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/12 13:59:06 by dyarkovs          #+#    #+#             */
-/*   Updated: 2024/06/15 23:24:05 by dyarkovs         ###   ########.fr       */
+/*   Updated: 2024/06/17 21:22:49 by dyarkovs         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,28 +16,34 @@
 #include <pthread.h>
 #include <stdio.h>
 #include <unistd.h>
+#include <stdlib.h>
+#include <limits.h>
 #include <stdbool.h>
 #include <sys/time.h>
 
 // #include "libft.h"
+typedef struct      s_philo;
 
-typedef struct  s_philosophers
+typedef struct      s_philosophers
 {
-    int         n_philos;
-    long        die_time;
-    long        eat_time;
-    long        sleep_time;
-    int         times_to_eat;
-}               t_philosophers;
+    int             n_philos;
+    t_philo         *philo_arr;
+    int             die_time;
+    int             eat_time;
+    int             sleep_time;
+    int             n_meals;
+}                   t_philosophers;
 
-typedef struct  s_philo
+typedef struct      s_philo
 {
-    struct s_philo *right_fork;
-    struct s_philo *left_fork;
-}               t_philo;
-
+    pthread_t       thread;
+    int             id;
+    int             meals_ate;
+    long            ate_last_time;
+    t_philosophers  *data;
+}                   t_philo;
 
 //utils
-int err_check(int ac, char **av);
-long long	ft_atol(const char *str);
+int     err_check(int ac, char **av);
+long	ft_atol(const char *str);
 #endif
