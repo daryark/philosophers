@@ -6,7 +6,7 @@
 /*   By: dyarkovs <dyarkovs@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/14 16:12:38 by dyarkovs          #+#    #+#             */
-/*   Updated: 2024/06/17 15:55:56 by dyarkovs         ###   ########.fr       */
+/*   Updated: 2024/06/25 21:47:59 by dyarkovs         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,4 +69,23 @@ int err_check(int ac, char **av)
             return (printf("Pass time to eat, sleep and die more than 60ms\n"));
     }
     return (0);
+}
+
+long    gettimeofday_in_mcrsec(void)
+{
+    struct timeval  tv;
+
+    gettimeofday(&tv, 0);
+    return (tv.tv_sec * 1000000 + tv.tv_usec);
+}
+
+void    ft_usleep(int ms)
+{
+    long    start;
+    long    now;
+    
+    start = gettimeofday_in_mcrsec();
+    now = start;
+    while (now - start < ms * 1000)
+        now  = gettimeofday_in_mcrsec();
 }

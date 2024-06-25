@@ -6,7 +6,7 @@
 /*   By: dyarkovs <dyarkovs@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/11 11:05:09 by dyarkovs          #+#    #+#             */
-/*   Updated: 2024/06/17 15:58:35 by dyarkovs         ###   ########.fr       */
+/*   Updated: 2024/06/25 21:56:48 by dyarkovs         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,23 +38,26 @@ static void	init_philo(int n, t_philo **arr)
 	}
 }
 
-static bool init_prog(int ac, char **av, t_philosophers *data)
+static bool init_prog(char **av, t_philosophers *data)
 {
-	(void)ac; //if i need it in some other inits?
+	int	i;
+
 	data->n_philos = (int)ft_atol(av[1]);
-	data->die_time = (int)ft_atol(av[2]);
-	data->sleep_time = (int)ft_atol(av[3]);
-	data->eat_time = (int)ft_atol(av[4]);
+	data->die_time = ft_atol(av[2]);
+	data->sleep_time = ft_atol(av[3]);
+	data->eat_time = ft_atol(av[4]);
 	data->n_meals = -1;
 	if (av[5])
 		data->n_meals = (int)ft_atol(av[5]);
-	data->philo_arr = NULL;
-	init_philo(data->n_philos, &data->philo_arr);
-	if (data->philo_arr == NULL)
-	{
-		printf("Allcation failed\n");
-		return (false);
-	}
+	// data->philo_arr = NULL;
+	i = -1;
+	while (++i < data->n_philos)
+		init_philo(data->n_philos, &data->philo_arr);
+	// if (data->philo_arr == NULL)
+	// {
+	// 	printf("Allcation failed\n");
+	// 	return (false);
+	// }
 	return (true);
 }
 
@@ -69,7 +72,7 @@ int	main(int ac, char **av)
 		return (1);
 	//*fill the table
 	printf("after err check\n");
-	if (!init_prog(ac, av, &data))
+	if (!init_prog(av, &data))
 		return (1);
 	//*start dinner
 	//*clean
@@ -79,3 +82,4 @@ int	main(int ac, char **av)
         // pthread_join(thrd2, NULL);
 	return (0);
 }
+//pthread_create(&philo.thread, NULL, &routine, &philo);

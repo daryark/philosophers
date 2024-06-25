@@ -6,7 +6,7 @@
 /*   By: dyarkovs <dyarkovs@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/12 13:59:06 by dyarkovs          #+#    #+#             */
-/*   Updated: 2024/06/17 21:22:49 by dyarkovs         ###   ########.fr       */
+/*   Updated: 2024/06/26 00:58:40 by dyarkovs         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,16 +27,18 @@ typedef struct      s_philo;
 typedef struct      s_philosophers
 {
     int             n_philos;
-    t_philo         *philo_arr;
-    int             die_time;
-    int             eat_time;
-    int             sleep_time;
+    // t_philo         *philo_arr;
+    long            die_time;
+    long            eat_time;
+    long            sleep_time;
     int             n_meals;
+    bool            has_died;
 }                   t_philosophers;
 
 typedef struct      s_philo
 {
     pthread_t       thread;
+    pthread_mutex_t mtx;
     int             id;
     int             meals_ate;
     long            ate_last_time;
@@ -46,4 +48,5 @@ typedef struct      s_philo
 //utils
 int     err_check(int ac, char **av);
 long	ft_atol(const char *str);
+long    gettimeofday_in_mcrsec();
 #endif
