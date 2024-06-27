@@ -6,7 +6,7 @@
 /*   By: dyarkovs <dyarkovs@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/14 16:12:38 by dyarkovs          #+#    #+#             */
-/*   Updated: 2024/06/25 21:47:59 by dyarkovs         ###   ########.fr       */
+/*   Updated: 2024/06/27 16:06:50 by dyarkovs         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,6 +68,7 @@ int err_check(int ac, char **av)
         if (n < 60 && (ac == 2 || ac == 3 || ac == 4))
             return (printf("Pass time to eat, sleep and die more than 60ms\n"));
     }
+    printf("Error check done\n");
     return (0);
 }
 
