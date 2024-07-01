@@ -6,7 +6,7 @@
 /*   By: dyarkovs <dyarkovs@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/14 16:12:38 by dyarkovs          #+#    #+#             */
-/*   Updated: 2024/06/27 16:06:50 by dyarkovs         ###   ########.fr       */
+/*   Updated: 2024/07/01 18:38:39 by dyarkovs         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ long	ft_atol(const char *str)
     return (nb * sign);
 }
 
-static int is_digit_loop(char *s)
+int is_digit_loop(char *s)
 {
     int i;
 
@@ -48,28 +48,23 @@ static int is_digit_loop(char *s)
     return (i);
 }
 
-int err_check(int ac, char **av)
+void    print_state(long time_ms, int philo_nb, t_act act)
 {
-    long    n;
+    char *msg;
 
-    if (ac != 5 && ac != 6)
-        return (printf("Wrong nubmer of arguments!\n"));
-    while (--ac)
-    {
-        n = ft_atol(av[ac]);
-        if (!is_digit_loop(av[ac]) || n < INT_MIN || n > INT_MAX)
-            return (printf("Only numeric parameters of 'int' type accepted\n"));
-        if (ac == 5 && n < 0)
-            return (printf("Philosopher cannot eat less than 0 times\n"));
-        if (ac == 1 && n > 200)
-            return (printf("You should not run the program with more than 200 philosophers\n"));
-        if (n <= 0 && ac != 5)
-            return (printf("Values more than 0 accepted, but for the 5 param - can be 0\n"));
-        if (n < 60 && (ac == 2 || ac == 3 || ac == 4))
-            return (printf("Pass time to eat, sleep and die more than 60ms\n"));
-    }
-    printf("Error check done\n");
-    return (0);
+    if (act == DIE)
+        msg = "died";
+    else if (act == EAT)
+        msg = "is eating";
+    else if (act == SLEEP)
+        msg = "is sleeping";
+    else if (act == THINK)
+        msg = "is thinking";
+    else if (act == FORK)
+        msg = "has taken a fork";
+    else
+        msg = "if anyone knows what the hell is he doin ???";
+    printf("%ld %d  %s\n", time_ms, philo_nb, msg);
 }
 
 long    gettimeofday_in_mcrsec(void)

@@ -6,7 +6,7 @@
 /*   By: dyarkovs <dyarkovs@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/12 13:59:06 by dyarkovs          #+#    #+#             */
-/*   Updated: 2024/06/27 16:56:15 by dyarkovs         ###   ########.fr       */
+/*   Updated: 2024/07/01 18:36:29 by dyarkovs         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,22 @@
 #include <stdbool.h>
 #include <sys/time.h>
 
+#define YELLOW "\033[0;33m"
+#define RED "\033[0;31m"
+#define GREEN "\033[0;32m"
+#define RE  "\033[0m"
+
 // #include "libft.h"
+
+typedef enum        s_act
+{
+    EAT,
+    SLEEP,
+    THINK,
+    FORK,
+    DIE
+}                   t_act;
+
 typedef struct s_philo  t_philo;
 
 typedef struct      s_fork
@@ -40,6 +55,7 @@ typedef struct      s_philosophers
     long            sleep_time;
     int             n_meals;
     bool            has_died;
+    long            prog_start_time;
 }                   t_philosophers;
 
 typedef struct      s_philo
@@ -50,12 +66,15 @@ typedef struct      s_philo
     int             id;
     int             meals_ate;
     long            ate_last_time;
-    t_philosophers  *data; //??*
+    t_philosophers  *data;
 }                   t_philo;
 
 //utils
 int     err_check(int ac, char **av);
+int     is_digit_loop(char *s);
 long	ft_atol(const char *str);
+void    print_state(long time_ms, int philo_nb, t_act act);
+void    ft_usleep(int ms);
 long    gettimeofday_in_mcrsec();
 
 bool    init_prog(char **av, t_philosophers *data);
