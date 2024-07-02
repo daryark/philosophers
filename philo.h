@@ -6,7 +6,7 @@
 /*   By: dyarkovs <dyarkovs@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/12 13:59:06 by dyarkovs          #+#    #+#             */
-/*   Updated: 2024/07/02 21:14:36 by dyarkovs         ###   ########.fr       */
+/*   Updated: 2024/07/02 21:27:29 by dyarkovs         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,12 +79,10 @@ long    gettimefromstart_ms(long start);
 
 bool    init_prog(char **av, t_philosophers *data);
 void	init_philos(t_philosophers *data);
-bool	create_forks(mtx_t **arr, int n);
-bool	create_threads(t_philosophers *data);
+void	create_forks(mtx_t **arr, int n);
+void	create_threads(t_philosophers *data);
 void    *philo_routine(void *philo);
 bool    philo_eat(t_philo *philo);
 bool    philo_sleep(t_philo *philo);
 void    stop_prog(t_philosophers *data);
-// void    clean_mtx_arr(mtx_t **arr, int n);
-// void    clean_philo_arr(t_philo **arr, int n);
 #endif
