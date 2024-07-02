@@ -6,7 +6,7 @@
 /*   By: dyarkovs <dyarkovs@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/14 16:12:38 by dyarkovs          #+#    #+#             */
-/*   Updated: 2024/07/02 01:26:01 by dyarkovs         ###   ########.fr       */
+/*   Updated: 2024/07/02 02:42:50 by dyarkovs         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,6 +65,6 @@ void    print_state(t_philo *philo, t_act act)
         msg = "has taken a fork";
     else
         msg = "if anyone knows what the hell is he doin ???";
-    printf("%.8-ld %.3d %s\n", gettimefromstart_ms(philo->data->prog_start_time), philo->id, msg);
+    printf("%-8ld %-3d %s\n", gettimefromstart_ms(philo->data->prog_start_time), philo->id, msg);
     pthread_mutex_unlock(&(philo->data->print_mtx));
 }

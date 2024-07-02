@@ -6,26 +6,25 @@
 /*   By: dyarkovs <dyarkovs@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/01 20:28:50 by dyarkovs          #+#    #+#             */
-/*   Updated: 2024/07/02 01:52:05 by dyarkovs         ###   ########.fr       */
+/*   Updated: 2024/07/02 03:00:07 by dyarkovs         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../philo.h"
 
-static void take_fork(t_philo *philo, int fork_n, int *has_forks)
+static void take_fork(t_philo *philo, mtx_t *fork)
 {
-    (*has_forks)++;
-    (void)fork_n;
-    // if (fork_n == 1)
-    //     philo->fork1->taken = 1;
-    // else
-    //     philo->fork2->taken = 1;
-    print_state(philo->id, FORK);
+    pthread_mutex_lock(fork);
+    print_state(philo, FORK);
 }
 bool    check_dead(t_philo *philo)
 {
-     if (gettimeofday_in_mcs() - philo->ate_last_time < philo->data->die_time)
+    long    diff;
+
+    diff = gettimeofday_in_mcs() - philo->ate_last_time;
+     if (diff > philo->data->die_time)
         philo->data->is_dead = true;
+    // printf("start: %ld, last ate: %ld, diff: %ld is_dead: %d\n", gettimeofday_in_mcs(), philo->ate_last_time, diff, philo->data->is_dead);
     return (philo->data->is_dead);
 }
 
@@ -37,33 +36,24 @@ void    philo_meal_count(t_philo *philo)
         philo->data->full_philos++;
 }
 
-bool    eat(t_philo *philo)
+bool    philo_eat(t_philo *philo)
 {
-    int has_forks;
-
-    has_forks = 0;
-    while (has_forks < 2)
-    {
-        // if (!philo->fork1->taken)
-        pthread_mutex_lock(philo->fork1->mtx);
-        take_fork(philo, 1, &has_forks);
-        // if (philo->fork2->taken)
-        pthread_mutex_lock(philo->fork2->mtx);
-        take_fork(philo, 2, &has_forks);
-    }
-    print_state(philo->id, EAT);
+    take_fork(philo, philo->fork1);
+    take_fork(philo, philo->fork2);
+    print_state(philo, EAT);
     philo->ate_last_time = gettimeofday_in_mcs();
-    if (!monitor_usleep(philo->data->eat_time, philo->data))
+    if (!monitor_usleep(philo->data->eat_time, philo))
         return (false);
     philo_meal_count(philo);
-    pthread_mutex_unlock(&(philo->fork2->mtx));
-    pthread_mutex_unlock(&(philo->fork1->mtx));
+    pthread_mutex_unlock(philo->fork2);
+    pthread_mutex_unlock(philo->fork1);
     return (!check_dead(philo));
 }
 
-// bool    stop_prog(t_philosophers *data)
-// {
-//     if (data->is_dead == true)    
-//         return (true);
-//     return (false);
-// }
+bool    philo_sleep(t_philo *philo)
+{
+    print_state(philo, SLEEP);
+    if (!monitor_usleep(philo->data->sleep_time, philo))
+        return (false);
+    return (check_dead(philo));
+}

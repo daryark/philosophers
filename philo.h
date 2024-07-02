@@ -6,7 +6,7 @@
 /*   By: dyarkovs <dyarkovs@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/12 13:59:06 by dyarkovs          #+#    #+#             */
-/*   Updated: 2024/07/02 01:58:55 by dyarkovs         ###   ########.fr       */
+/*   Updated: 2024/07/02 02:35:56 by dyarkovs         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,9 @@
 
 // #include "libft.h"
 
+typedef pthread_mutex_t mtx_t;
+typedef struct s_philo  t_philo;
+
 typedef enum        s_act
 {
     EAT,
@@ -37,20 +40,11 @@ typedef enum        s_act
     DIE
 }                   t_act;
 
-typedef struct s_philo  t_philo;
-
-//*remove struct and leave fork as onty mtx
-typedef struct      s_fork
-{
-    bool            taken;
-    pthread_mutex_t *mtx;
-}                   t_fork;
-
 typedef struct      s_philosophers
 {
     int             n_philos;
     t_philo         *philo_arr;
-    t_fork          *fork_arr;
+    mtx_t          *fork_arr;
     long            die_time;
     long            eat_time;
     long            sleep_time;
@@ -58,14 +52,14 @@ typedef struct      s_philosophers
     int             full_philos;
     bool            is_dead;
     long            prog_start_time;
-    pthread_mutex_t print_mtx;
+    mtx_t           print_mtx;
 }                   t_philosophers;
 
 typedef struct      s_philo
 {
     pthread_t       thread;
-    t_fork          *fork1;
-    t_fork          *fork2;
+    mtx_t          *fork1;
+    mtx_t          *fork2;
     int             id;
     int             meals_ate;
     bool            is_full;
@@ -85,10 +79,12 @@ long    gettimefromstart_ms(long start);
 
 bool    init_prog(char **av, t_philosophers *data);
 void	init_philos(t_philosophers *data);
-bool	create_forks(t_fork **arr, int n);
+bool	create_forks(mtx_t **arr, int n);
 bool	create_threads(t_philosophers *data);
 void    *philo_routine(void *philo);
+bool    philo_eat(t_philo *philo);
+bool    philo_sleep(t_philo *philo);
 void    stop_prog(t_philosophers *data);
-void    clean_mtx_arr(t_fork **arr);
+void    clean_mtx_arr(mtx_t **arr);
 void    clean_philo_arr(t_philo **arr);
 #endif

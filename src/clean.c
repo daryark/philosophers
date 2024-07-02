@@ -6,19 +6,19 @@
 /*   By: dyarkovs <dyarkovs@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 13:44:32 by dyarkovs          #+#    #+#             */
-/*   Updated: 2024/07/02 01:58:23 by dyarkovs         ###   ########.fr       */
+/*   Updated: 2024/07/02 02:23:14 by dyarkovs         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../philo.h"
 
-void    clean_mtx_arr(t_fork **arr)
+void    clean_mtx_arr(mtx_t **arr)
 {
     int i;
 
     i = -1;
     while (arr[++i])
-        pthread_mutex_destroy(&(*arr)[i].mtx);
+        pthread_mutex_destroy(&(*arr)[i]);
     free(*arr);
     *arr = NULL;
     printf(RED "clean mtx fn (pthread mutex destroy)\n" RE);
