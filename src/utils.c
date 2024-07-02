@@ -6,7 +6,7 @@
 /*   By: dyarkovs <dyarkovs@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/14 16:12:38 by dyarkovs          #+#    #+#             */
-/*   Updated: 2024/07/02 02:42:50 by dyarkovs         ###   ########.fr       */
+/*   Updated: 2024/07/02 19:53:47 by dyarkovs         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,9 @@ void    print_state(t_philo *philo, t_act act)
 {
     char *msg;
 
+    // printf("before print lock\n");
     pthread_mutex_lock(&(philo->data->print_mtx));
+    // printf("just after mtx lock\n");
     if (act == DIE)
         msg = "died";
     else if (act == EAT)

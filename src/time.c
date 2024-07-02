@@ -6,7 +6,7 @@
 /*   By: dyarkovs <dyarkovs@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/01 22:07:26 by dyarkovs          #+#    #+#             */
-/*   Updated: 2024/07/02 14:51:15 by dyarkovs         ###   ########.fr       */
+/*   Updated: 2024/07/02 20:01:58 by dyarkovs         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,15 +35,23 @@ bool    monitor_usleep(int mcs, t_philo *philo)
     now = start;
     while (now - start < mcs)
     {
-        //*lock here while check, but what ?
         if (philo->data->full_philos == philo->data->n_philos)
             printf(GREEN "full all\n" RE);
-        if (check_dead(philo) || philo->data->full_philos == philo->data->n_philos)
+        if (check_dead(philo))
         {
             if (philo->data->is_dead)
-                printf(RED "Oh no, philo dead\n" RE);
-            //*unlock here ?
+            {
+                pthread_mutex_unlock(&(philo->data->print_mtx));
+                printf(RED "DEAD" RE);
+            }
             return (false);
+        pthread_mutex_lock(&(philo->data->print_mtx));
+        if (philo->data->full_philos == philo->data->n_philos)
+        {
+            pthread_mutex_unlock(&philo->data->print_mtx);
+            return (false);
+        }
+        // pthread_mutex_unlock(&philo->data->print_mtx);
         }
         now  = gettimeofday_in_mcs();
     }

@@ -1,53 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   init_run.c                                         :+:      :+:    :+:   */
+/*   init.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: dyarkovs <dyarkovs@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 13:02:12 by dyarkovs          #+#    #+#             */
-/*   Updated: 2024/07/02 16:18:56 by dyarkovs         ###   ########.fr       */
+/*   Updated: 2024/07/02 19:40:53 by dyarkovs         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../philo.h"
-
-bool	create_forks(mtx_t **arr, int n)
-{
-	int i;
-
-	i = -1;
-	while (++i < n)
-	{
-		if (pthread_mutex_init(&((*arr)[i]), NULL))
-		{
-			printf(RED "clean return mtx\n" RE);
-			return (clean_mtx_arr(arr), false);
-		}
-	}
-	return (true);
-}
-
-bool	create_threads(t_philosophers *data)
-{
-	int	i;
-
-	i = -1;
-	init_philos(data);
-	pthread_mutex_lock(&data->print_mtx);
-	while (++i < data->n_philos)
-	{
-		if (pthread_create(&data->philo_arr[i].thread, NULL, &philo_routine, &data->philo_arr[i]))
-		{
-			printf(RED "clean return\n"  RE);
-			return (clean_philo_arr(&data->philo_arr), false);
-		}
-		// printf(GREEN "PHILO\nphilo->id: %d\nphilo->fork1: %p\nphilo->fork2: %p\nphilo->thread: %lu\n, philo->meals_ate: %d\n, philo->ate_last_time: %ld\n" RE, data->philo_arr[i].id, data->philo_arr[i].fork1, data->philo_arr[i].fork2, data->philo_arr[i].thread, data->philo_arr[i].meals_ate, data->philo_arr[i].ate_last_time);
-	}
-	printf("threads done\n");
-	pthread_mutex_unlock(&data->print_mtx);
-	return (true);
-}
 
 static void	assign_forks(t_philo *philo, mtx_t *f1, mtx_t *f2)
 {
