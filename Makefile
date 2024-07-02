@@ -3,7 +3,7 @@ RE = \033[0m
 NAME = ./philo
 C_FLAGS = -Wall -Wextra -Werror -pthread
 
-SRC = philo.c  err_check.c utils.c init.c clean.c
+SRC = main.c err_check.c utils.c init_run.c process.c clean.c
 OBJ_F = obj/
 SRC_F = src/
 VPATH = $(SRC_F)

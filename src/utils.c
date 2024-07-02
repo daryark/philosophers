@@ -6,7 +6,7 @@
 /*   By: dyarkovs <dyarkovs@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/14 16:12:38 by dyarkovs          #+#    #+#             */
-/*   Updated: 2024/07/01 18:38:39 by dyarkovs         ###   ########.fr       */
+/*   Updated: 2024/07/02 01:26:01 by dyarkovs         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,10 +48,11 @@ int is_digit_loop(char *s)
     return (i);
 }
 
-void    print_state(long time_ms, int philo_nb, t_act act)
+void    print_state(t_philo *philo, t_act act)
 {
     char *msg;
 
+    pthread_mutex_lock(&(philo->data->print_mtx));
     if (act == DIE)
         msg = "died";
     else if (act == EAT)
@@ -64,24 +65,6 @@ void    print_state(long time_ms, int philo_nb, t_act act)
         msg = "has taken a fork";
     else
         msg = "if anyone knows what the hell is he doin ???";
-    printf("%ld %d  %s\n", time_ms, philo_nb, msg);
-}
-
-long    gettimeofday_in_mcrsec(void)
-{
-    struct timeval  tv;
-
-    gettimeofday(&tv, 0);
-    return (tv.tv_sec * 1000000 + tv.tv_usec);
-}
-
-void    ft_usleep(int ms)
-{
-    long    start;
-    long    now;
-    
-    start = gettimeofday_in_mcrsec();
-    now = start;
-    while (now - start < ms * 1000)
-        now  = gettimeofday_in_mcrsec();
+    printf("%.8-ld %.3d %s\n", gettimefromstart_ms(philo->data->prog_start_time), philo->id, msg);
+    pthread_mutex_unlock(&(philo->data->print_mtx));
 }

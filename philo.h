@@ -6,7 +6,7 @@
 /*   By: dyarkovs <dyarkovs@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/12 13:59:06 by dyarkovs          #+#    #+#             */
-/*   Updated: 2024/07/01 18:36:29 by dyarkovs         ###   ########.fr       */
+/*   Updated: 2024/07/02 01:58:55 by dyarkovs         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,10 +39,11 @@ typedef enum        s_act
 
 typedef struct s_philo  t_philo;
 
+//*remove struct and leave fork as onty mtx
 typedef struct      s_fork
 {
     bool            taken;
-    pthread_mutex_t mtx;
+    pthread_mutex_t *mtx;
 }                   t_fork;
 
 typedef struct      s_philosophers
@@ -54,17 +55,20 @@ typedef struct      s_philosophers
     long            eat_time;
     long            sleep_time;
     int             n_meals;
-    bool            has_died;
+    int             full_philos;
+    bool            is_dead;
     long            prog_start_time;
+    pthread_mutex_t print_mtx;
 }                   t_philosophers;
 
 typedef struct      s_philo
 {
     pthread_t       thread;
-    t_fork          *r_fork;
-    t_fork          *l_fork;
+    t_fork          *fork1;
+    t_fork          *fork2;
     int             id;
     int             meals_ate;
+    bool            is_full;
     long            ate_last_time;
     t_philosophers  *data;
 }                   t_philo;
@@ -73,15 +77,18 @@ typedef struct      s_philo
 int     err_check(int ac, char **av);
 int     is_digit_loop(char *s);
 long	ft_atol(const char *str);
-void    print_state(long time_ms, int philo_nb, t_act act);
-void    ft_usleep(int ms);
-long    gettimeofday_in_mcrsec();
+void    print_state(t_philo *philo,  t_act act);
+bool    monitor_usleep(int mcs, t_philo *philo);
+bool    check_dead(t_philo *philo);
+long    gettimeofday_in_mcs();
+long    gettimefromstart_ms(long start);
 
 bool    init_prog(char **av, t_philosophers *data);
-bool	create_forks(t_fork **arr, int n);
 void	init_philos(t_philosophers *data);
-bool	create_threads_run(t_philosophers *data);
+bool	create_forks(t_fork **arr, int n);
+bool	create_threads(t_philosophers *data);
 void    *philo_routine(void *philo);
+void    stop_prog(t_philosophers *data);
 void    clean_mtx_arr(t_fork **arr);
 void    clean_philo_arr(t_philo **arr);
 #endif
