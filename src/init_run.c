@@ -6,7 +6,7 @@
 /*   By: dyarkovs <dyarkovs@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 13:02:12 by dyarkovs          #+#    #+#             */
-/*   Updated: 2024/07/02 03:01:30 by dyarkovs         ###   ########.fr       */
+/*   Updated: 2024/07/02 16:18:56 by dyarkovs         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,7 @@ bool	create_threads(t_philosophers *data)
 
 	i = -1;
 	init_philos(data);
+	pthread_mutex_lock(&data->print_mtx);
 	while (++i < data->n_philos)
 	{
 		if (pthread_create(&data->philo_arr[i].thread, NULL, &philo_routine, &data->philo_arr[i]))
@@ -44,6 +45,7 @@ bool	create_threads(t_philosophers *data)
 		// printf(GREEN "PHILO\nphilo->id: %d\nphilo->fork1: %p\nphilo->fork2: %p\nphilo->thread: %lu\n, philo->meals_ate: %d\n, philo->ate_last_time: %ld\n" RE, data->philo_arr[i].id, data->philo_arr[i].fork1, data->philo_arr[i].fork2, data->philo_arr[i].thread, data->philo_arr[i].meals_ate, data->philo_arr[i].ate_last_time);
 	}
 	printf("threads done\n");
+	pthread_mutex_unlock(&data->print_mtx);
 	return (true);
 }
 
@@ -86,9 +88,9 @@ bool init_prog(char **av, t_philosophers *data)
 	data->die_time = ft_atol(av[2]) * 1000;
 	data->eat_time = ft_atol(av[3]) * 1000;
 	data->sleep_time = ft_atol(av[4]) * 1000;
-	data->n_meals = -1;
-	data->full_philos = 0;
 	data->is_dead = false;
+	data->full_philos = 0;
+	data->n_meals = -1;
 	if (av[5])
 		data->n_meals = (int)ft_atol(av[5]);
 	data->philo_arr = malloc(sizeof(t_philo) * data->n_philos);
@@ -103,6 +105,5 @@ bool init_prog(char **av, t_philosophers *data)
 		printf(RED "clean return print_mtx\n" RE);
 		return (false);
 	}
-	printf("prog inited\n");
 	return (true);
 }

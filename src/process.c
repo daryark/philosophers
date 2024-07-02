@@ -6,7 +6,7 @@
 /*   By: dyarkovs <dyarkovs@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/01 20:28:50 by dyarkovs          #+#    #+#             */
-/*   Updated: 2024/07/02 03:00:07 by dyarkovs         ###   ########.fr       */
+/*   Updated: 2024/07/02 16:11:52 by dyarkovs         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,8 +23,11 @@ bool    check_dead(t_philo *philo)
 
     diff = gettimeofday_in_mcs() - philo->ate_last_time;
      if (diff > philo->data->die_time)
+    {
+        printf(RED "DEAD" RE);
+        print_state(philo, DIE);
         philo->data->is_dead = true;
-    // printf("start: %ld, last ate: %ld, diff: %ld is_dead: %d\n", gettimeofday_in_mcs(), philo->ate_last_time, diff, philo->data->is_dead);
+    }
     return (philo->data->is_dead);
 }
 
@@ -32,7 +35,7 @@ void    philo_meal_count(t_philo *philo)
 {
     if (philo->data->n_meals > 0)
         philo->meals_ate++;
-    if (philo->data->n_meals <= philo->meals_ate)
+    if (philo->data->n_meals > 0 && philo->data->n_meals <= philo->meals_ate)
         philo->data->full_philos++;
 }
 
@@ -55,5 +58,5 @@ bool    philo_sleep(t_philo *philo)
     print_state(philo, SLEEP);
     if (!monitor_usleep(philo->data->sleep_time, philo))
         return (false);
-    return (check_dead(philo));
+    return (!check_dead(philo));
 }

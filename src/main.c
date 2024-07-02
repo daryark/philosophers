@@ -6,7 +6,7 @@
 /*   By: dyarkovs <dyarkovs@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/11 11:05:09 by dyarkovs          #+#    #+#             */
-/*   Updated: 2024/07/02 03:04:56 by dyarkovs         ###   ########.fr       */
+/*   Updated: 2024/07/02 16:09:09 by dyarkovs         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,33 +17,34 @@ void	*philo_routine(void *philo)
 	t_philo *ph;
 
 	ph = (t_philo *)philo;
-	// printf("Thread worked\n");
 	if (ph->id % 2 == 0)
 		monitor_usleep(ph->data->eat_time, ph);
 	while (1)
 	{
 		if (ph->data->full_philos == ph->data->n_philos || check_dead(ph))
 		{
-			printf("return prev check\n");
+			printf(YELLOW "return prev check\n" RE);
 			break ;
 		}
-		monitor_usleep(1, ph);
+		if (!monitor_usleep(1, ph))
+			break ;
 		print_state(ph, THINK);
 		if (!philo_eat(ph) || ph->data->full_philos == ph->data->n_philos)
 		{
-			printf("return eat\n");
+			printf(YELLOW "return eat\n" RE);
 			break ;
 		}
 		if (!philo_sleep(ph) || ph->data->full_philos == ph->data->n_philos)
 		{
-			printf("return sleep\n");
+			printf(YELLOW "dead: %d, full: %d\n", ph->data->is_dead, ph->data->full_philos);
+			printf(YELLOW "return sleep\n" RE);
 			break ;
 		}
 	}
-	if (ph->data->is_dead)
-		print_state(ph, DIE);
-	else if (ph->data->full_philos)
-		printf("finished");
+	// if (ph->data->is_dead)
+	// 	print_state(ph, DIE);
+	if (ph->data->full_philos)
+		printf(GREEN "finished" RE);
 	//*close lock
 	// printf("End of thread, %d\n", ph->meals_ate);
 	//*open lock
