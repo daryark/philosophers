@@ -6,7 +6,7 @@
 /*   By: dyarkovs <dyarkovs@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/12 13:59:06 by dyarkovs          #+#    #+#             */
-/*   Updated: 2024/07/02 21:27:29 by dyarkovs         ###   ########.fr       */
+/*   Updated: 2024/07/02 23:50:05 by dyarkovs         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,6 +74,7 @@ long	ft_atol(const char *str);
 void    print_state(t_philo *philo,  t_act act);
 bool    monitor_usleep(int mcs, t_philo *philo);
 bool    check_dead(t_philo *philo);
+bool    check_full(t_philosophers *data);
 long    gettimeofday_in_mcs();
 long    gettimefromstart_ms(long start);
 

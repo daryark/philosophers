@@ -6,7 +6,7 @@
 /*   By: dyarkovs <dyarkovs@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/11 11:05:09 by dyarkovs          #+#    #+#             */
-/*   Updated: 2024/07/02 21:26:19 by dyarkovs         ###   ########.fr       */
+/*   Updated: 2024/07/03 00:15:29 by dyarkovs         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,46 +35,37 @@ void	create_threads(t_philosophers *data)
 	printf("print mtx unlocked\n");
 }
 
+bool	check_full(t_philosophers *data)
+{
+	pthread_mutex_lock(&data->print_mtx);
+	if (data->n_philos == data->full_philos)
+	{
+		pthread_mutex_unlock(&data->print_mtx);
+		return (true);
+	}
+	pthread_mutex_unlock(&data->print_mtx);
+	return (false);
+}
+
 void	*philo_routine(void *philo)
 {
 	t_philo *ph;
 
 	ph = (t_philo *)philo;
-	printf("in philo %d routine\n", ph->id);
 	if (ph->id % 2 == 0)
 		monitor_usleep(ph->data->eat_time, ph);
 	while (1)
 	{
-		// printf("check dead: %d\n", ph->data->is_dead);
-		if (ph->data->full_philos == ph->data->n_philos || check_dead(ph))
-		{
-			printf(YELLOW "dead: %d, full: %d\n", ph->data->is_dead, ph->data->full_philos);
-			printf(YELLOW "return prev check\n" RE);
+		if (check_full(ph->data) || check_dead(ph))
 			break ;
-		}
-		// printf("after check before think\n");
 		if (!monitor_usleep(1, ph))
 			break ;
-		// printf("after check and think\n");
 		print_state(ph, THINK);
-		// printf("afther think print state\n");
-		if (!philo_eat(ph) || ph->data->full_philos == ph->data->n_philos)
-		{
-			printf(YELLOW "dead: %d, full: %d\n", ph->data->is_dead, ph->data->full_philos);
-			printf(YELLOW "return eat\n" RE);
+		if (!philo_eat(ph))
 			break ;
-		}
-		if (!philo_sleep(ph) || ph->data->full_philos == ph->data->n_philos)
-		{
-			printf(YELLOW "dead: %d, full: %d\n", ph->data->is_dead, ph->data->full_philos);
-			printf(YELLOW "return sleep\n" RE);
+		if (!philo_sleep(ph))
 			break ;
-		}
 	}
-	printf("outside while(1) loop\n");
-	printf("ph->data->full_philos: %d\n", ph->data->full_philos);
-	if (ph->data->full_philos == ph->data->n_philos)
-		printf(GREEN "finished" RE);
     return (NULL);
 }
 

@@ -1,7 +1,7 @@
 GREEN = \033[0;32m
 RE = \033[0m
 NAME = ./philo
-C_FLAGS = -Wall -Wextra -Werror -pthread
+C_FLAGS = -Wall -Wextra -Werror -fsanitize=thread -pthread
 
 SRC = main.c err_check.c utils.c time.c init.c process.c clean.c
 OBJ_F = obj/
