@@ -6,7 +6,7 @@
 /*   By: dyarkovs <dyarkovs@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 13:02:12 by dyarkovs          #+#    #+#             */
-/*   Updated: 2024/07/02 19:40:53 by dyarkovs         ###   ########.fr       */
+/*   Updated: 2024/07/03 15:39:24 by dyarkovs         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,9 +64,7 @@ bool init_prog(char **av, t_philosophers *data)
 		return (free(data->philo_arr), false);
 	data->prog_start_time = gettimeofday_in_mcs();
 	if (pthread_mutex_init(&data->print_mtx, NULL))
-	{
-		printf(RED "clean return print_mtx\n" RE);
 		return (false);
-	}
+	data->check_print = false;
 	return (true);
 }

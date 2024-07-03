@@ -6,7 +6,7 @@
 /*   By: dyarkovs <dyarkovs@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/11 11:05:09 by dyarkovs          #+#    #+#             */
-/*   Updated: 2024/07/03 00:15:29 by dyarkovs         ###   ########.fr       */
+/*   Updated: 2024/07/03 16:29:41 by dyarkovs         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,20 +31,6 @@ void	create_threads(t_philosophers *data)
 	while (++i < data->n_philos)
 		pthread_create(&data->philo_arr[i].thread, NULL, &philo_routine, &data->philo_arr[i]);
 	pthread_mutex_unlock(&data->print_mtx);
-	printf("threads done\n");
-	printf("print mtx unlocked\n");
-}
-
-bool	check_full(t_philosophers *data)
-{
-	pthread_mutex_lock(&data->print_mtx);
-	if (data->n_philos == data->full_philos)
-	{
-		pthread_mutex_unlock(&data->print_mtx);
-		return (true);
-	}
-	pthread_mutex_unlock(&data->print_mtx);
-	return (false);
 }
 
 void	*philo_routine(void *philo)
@@ -61,7 +47,9 @@ void	*philo_routine(void *philo)
 		if (!monitor_usleep(1, ph))
 			break ;
 		print_state(ph, THINK);
-		if (!philo_eat(ph))
+		if (check_full(ph->data) || check_dead(ph))
+			break ;
+		if( !philo_eat(ph))
 			break ;
 		if (!philo_sleep(ph))
 			break ;

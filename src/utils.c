@@ -6,11 +6,37 @@
 /*   By: dyarkovs <dyarkovs@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/14 16:12:38 by dyarkovs          #+#    #+#             */
-/*   Updated: 2024/07/02 19:53:47 by dyarkovs         ###   ########.fr       */
+/*   Updated: 2024/07/03 16:30:43 by dyarkovs         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../philo.h"
+
+void    print_state(t_philo *philo, t_act act)
+{
+    char *msg;
+
+    if (act == DIE)
+        msg = "died";
+    else if (act == EAT)
+        msg = "is eating";
+    else if (act == SLEEP)
+        msg = "is sleeping";
+    else if (act == THINK)
+        msg = "is thinking";
+    else if (act == FORK)
+        msg = "has taken a fork";
+    else
+        msg = "what the hell r u doin???";
+    pthread_mutex_lock(&(philo->data->print_mtx));
+    if (philo->data->is_dead && act != DIE)
+    {
+        pthread_mutex_unlock(&philo->data->print_mtx);
+        return ;
+    }
+    printf("%-8ld %-3d %s\n", gettimefromstart_ms(philo->data->prog_start_time), philo->id, msg);
+    pthread_mutex_unlock(&(philo->data->print_mtx));
+}
 
 long	ft_atol(const char *str)
 {
@@ -46,27 +72,4 @@ int is_digit_loop(char *s)
             return (0);
     }
     return (i);
-}
-
-void    print_state(t_philo *philo, t_act act)
-{
-    char *msg;
-
-    // printf("before print lock\n");
-    pthread_mutex_lock(&(philo->data->print_mtx));
-    // printf("just after mtx lock\n");
-    if (act == DIE)
-        msg = "died";
-    else if (act == EAT)
-        msg = "is eating";
-    else if (act == SLEEP)
-        msg = "is sleeping";
-    else if (act == THINK)
-        msg = "is thinking";
-    else if (act == FORK)
-        msg = "has taken a fork";
-    else
-        msg = "if anyone knows what the hell is he doin ???";
-    printf("%-8ld %-3d %s\n", gettimefromstart_ms(philo->data->prog_start_time), philo->id, msg);
-    pthread_mutex_unlock(&(philo->data->print_mtx));
 }

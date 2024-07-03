@@ -6,7 +6,7 @@
 /*   By: dyarkovs <dyarkovs@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/12 13:59:06 by dyarkovs          #+#    #+#             */
-/*   Updated: 2024/07/02 23:50:05 by dyarkovs         ###   ########.fr       */
+/*   Updated: 2024/07/03 15:38:22 by dyarkovs         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,7 @@ typedef struct      s_philosophers
     bool            is_dead;
     long            prog_start_time;
     mtx_t           print_mtx;
+    bool            check_print;
 }                   t_philosophers;
 
 typedef struct      s_philo
