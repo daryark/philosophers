@@ -6,7 +6,7 @@
 /*   By: dyarkovs <dyarkovs@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/01 20:28:50 by dyarkovs          #+#    #+#             */
-/*   Updated: 2024/07/03 16:42:26 by dyarkovs         ###   ########.fr       */
+/*   Updated: 2024/07/03 19:02:35 by dyarkovs         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,12 +23,12 @@ static bool take_fork(t_philo *philo, mtx_t *fork)
 
 void    philo_meal_count(t_philo *philo)
 {
-    pthread_mutex_lock(&philo->data->print_mtx);
+    pthread_mutex_lock(&philo->data->check_mtx);
     if (philo->data->n_meals > 0)
         philo->meals_ate++;
     if (philo->data->n_meals > 0 && philo->data->n_meals <= philo->meals_ate)
         philo->data->full_philos++;
-    pthread_mutex_unlock(&philo->data->print_mtx);
+    pthread_mutex_unlock(&philo->data->check_mtx);
 }
 
 bool    philo_eat(t_philo *philo)
@@ -39,7 +39,10 @@ bool    philo_eat(t_philo *philo)
         return (false);
     }
     if (philo->data->n_philos == 1)
+    {
+        pthread_mutex_unlock(philo->fork1);
         return (monitor_usleep(philo->data->die_time, philo));
+    }
     if (!take_fork(philo, philo->fork2))
     {
         pthread_mutex_unlock(philo->fork2);

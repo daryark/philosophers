@@ -6,7 +6,7 @@
 /*   By: dyarkovs <dyarkovs@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 13:44:32 by dyarkovs          #+#    #+#             */
-/*   Updated: 2024/07/03 15:38:30 by dyarkovs         ###   ########.fr       */
+/*   Updated: 2024/07/03 19:02:35 by dyarkovs         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,5 +26,5 @@ void    stop_prog(t_philosophers *data)
         pthread_mutex_destroy(&data->fork_arr[i]);
     free(data->fork_arr);
     data->philo_arr = NULL;
-	pthread_mutex_destroy(&data->print_mtx);
+	pthread_mutex_destroy(&data->check_mtx);
 }

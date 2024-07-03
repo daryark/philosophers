@@ -6,7 +6,7 @@
 /*   By: dyarkovs <dyarkovs@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/11 11:05:09 by dyarkovs          #+#    #+#             */
-/*   Updated: 2024/07/03 16:29:41 by dyarkovs         ###   ########.fr       */
+/*   Updated: 2024/07/03 19:44:13 by dyarkovs         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,16 +42,14 @@ void	*philo_routine(void *philo)
 		monitor_usleep(ph->data->eat_time, ph);
 	while (1)
 	{
-		if (check_full(ph->data) || check_dead(ph))
+		if( !philo_eat(ph))
+			break ;
+		if (!philo_sleep(ph))
 			break ;
 		if (!monitor_usleep(1, ph))
 			break ;
 		print_state(ph, THINK);
 		if (check_full(ph->data) || check_dead(ph))
-			break ;
-		if( !philo_eat(ph))
-			break ;
-		if (!philo_sleep(ph))
 			break ;
 	}
     return (NULL);

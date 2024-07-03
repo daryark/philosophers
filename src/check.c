@@ -6,7 +6,7 @@
 /*   By: dyarkovs <dyarkovs@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/01 17:43:52 by dyarkovs          #+#    #+#             */
-/*   Updated: 2024/07/03 16:26:55 by dyarkovs         ###   ########.fr       */
+/*   Updated: 2024/07/03 19:32:13 by dyarkovs         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,33 +16,31 @@ bool    check_dead(t_philo *philo)
 {
     long    diff;
 
-    pthread_mutex_lock(&philo->data->print_mtx);
+    pthread_mutex_lock(&philo->data->check_mtx);
     diff = gettimeofday_in_mcs() - philo->ate_last_time;
      if (diff > philo->data->die_time || philo->data->is_dead)
     {
         if (!philo->data->is_dead)
         {
             philo->data->is_dead = true;
-        pthread_mutex_unlock(&philo->data->print_mtx);
             print_state(philo, DIE);
-        pthread_mutex_lock(&philo->data->print_mtx);
         }
-        pthread_mutex_unlock(&philo->data->print_mtx);
+        pthread_mutex_unlock(&philo->data->check_mtx);
         return (true);
     }
-    pthread_mutex_unlock(&philo->data->print_mtx);
+    pthread_mutex_unlock(&philo->data->check_mtx);
     return (false);
 }
 
 bool	check_full(t_philosophers *data)
 {
-	pthread_mutex_lock(&data->print_mtx);
+	pthread_mutex_lock(&data->check_mtx);
 	if (data->n_philos == data->full_philos)
 	{
-		pthread_mutex_unlock(&data->print_mtx);
+		pthread_mutex_unlock(&data->check_mtx);
 		return (true);
 	}
-	pthread_mutex_unlock(&data->print_mtx);
+	pthread_mutex_unlock(&data->check_mtx);
 	return (false);
 }
 
