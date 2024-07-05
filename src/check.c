@@ -6,43 +6,70 @@
 /*   By: dyarkovs <dyarkovs@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/01 17:43:52 by dyarkovs          #+#    #+#             */
-/*   Updated: 2024/07/03 19:32:13 by dyarkovs         ###   ########.fr       */
+/*   Updated: 2024/07/05 17:00:01 by dyarkovs         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../philo.h"
 
-bool    check_dead(t_philo *philo)
+bool    check_dead(t_philosophers *data)
 {
-    long    diff;
+   int  i;
+   long left_mcs;
 
-    pthread_mutex_lock(&philo->data->check_mtx);
-    diff = gettimeofday_in_mcs() - philo->ate_last_time;
-     if (diff > philo->data->die_time || philo->data->is_dead)
+   i = -1;
+    while (++i < data->n_philos)
     {
-        if (!philo->data->is_dead)
+        pthread_mutex_lock(&data->meal_lock);
+        left_mcs = gettimeofday_in_mcs() - data->philos[i].ate_last_time;
+        pthread_mutex_unlock(&data->meal_lock);
+        if (left_mcs < data->eat_time)
         {
-            philo->data->is_dead = true;
-            print_state(philo, DIE);
+            data->stop_prog_flag = true;
+            print_state(&data->philos[i], DIE);
+            return (true);
         }
-        pthread_mutex_unlock(&philo->data->check_mtx);
-        return (true);
     }
-    pthread_mutex_unlock(&philo->data->check_mtx);
     return (false);
 }
 
-bool	check_full(t_philosophers *data)
+bool	check_full_all(t_philosophers *data)
 {
-	pthread_mutex_lock(&data->check_mtx);
-	if (data->n_philos == data->full_philos)
-	{
-		pthread_mutex_unlock(&data->check_mtx);
-		return (true);
-	}
-	pthread_mutex_unlock(&data->check_mtx);
-	return (false);
+	int  i;
+    int  n_full;
+
+    n_full = 0;
+    i = -1;
+    pthread_mutex_lock(&data->meal_lock);
+    if (data->philos[0].meals_left == -1)
+        return (pthread_mutex_unlock(&data->meal_lock), false);
+    while (++i < data->n_philos)
+    {
+        if (data->philos[i].meals_left == 0)
+            n_full++;
+    }
+    if (n_full == data->n_philos)
+    {
+        data->stop_prog_flag = true;
+        return (pthread_mutex_unlock(&data->meal_lock), true);
+    }
+    return (pthread_mutex_unlock(&data->meal_lock), false);
 }
+
+//check_dead_lock for both: check_dead & check_full fns as both can change stop_prog_flag
+//+meal_lock:check dead/no 
+//+meal_lock:check_full/no for loop! to not lock/unlock each time i check philo.is_full
+// //*assigned this act to monitor_routine now
+// bool    stop_prog(t_philosophers *data)
+// {
+//     bool stop;
+
+//     pthread_mutex_lock(&data->check_dead_lock);
+//     stop = false;
+//     if (check_dead(data) || check_full_all(data))
+//         stop = true;
+//     return (pthread_mutex_unlock(&data->check_dead_lock), stop);
+// }
 
 int err_check(int ac, char **av)
 {

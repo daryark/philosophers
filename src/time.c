@@ -6,7 +6,7 @@
 /*   By: dyarkovs <dyarkovs@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/01 22:07:26 by dyarkovs          #+#    #+#             */
-/*   Updated: 2024/07/04 16:29:28 by dyarkovs         ###   ########.fr       */
+/*   Updated: 2024/07/05 16:37:46 by dyarkovs         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,13 +42,12 @@ long gettimefromstart_ms(long start_mcs)
 //     return (true);
 // }
 
-bool monitor_usleep(int mcs, t_philo *philo)
+void ft_usleep(int mcs)
 {
     long start;
     long now;
     long elapsed;
 
-    (void)philo;
     start = gettimeofday_in_mcs();
     while (true)
     {
@@ -61,6 +60,5 @@ bool monitor_usleep(int mcs, t_philo *philo)
         else
             usleep(mcs - elapsed);
     }
-    return true;
 }
 

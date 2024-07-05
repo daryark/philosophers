@@ -6,7 +6,7 @@
 /*   By: dyarkovs <dyarkovs@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/14 16:12:38 by dyarkovs          #+#    #+#             */
-/*   Updated: 2024/07/03 18:41:30 by dyarkovs         ###   ########.fr       */
+/*   Updated: 2024/07/05 18:29:34 by dyarkovs         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,13 @@ void    print_state(t_philo *philo, t_act act)
 {
     char *msg;
 
+    pthread_mutex_lock(&philo->data->check_dead_lock);
+	if (philo->data->stop_prog_flag)
+    {
+        pthread_mutex_unlock(&philo->data->check_dead_lock);
+        return ;
+    }
+	pthread_mutex_unlock(&philo->data->check_dead_lock);
     if (act == DIE)
         msg = "died";
     else if (act == EAT)
@@ -28,14 +35,12 @@ void    print_state(t_philo *philo, t_act act)
         msg = "has taken a fork";
     else
         msg = "what the hell r u doin???";
-    pthread_mutex_lock(&(philo->data->print_mtx));
-    if (philo->data->is_dead && act != DIE)
-    {
-        pthread_mutex_unlock(&philo->data->print_mtx);
-        return ;
-    }
-    printf("%-8ld %-3d %s\n", gettimefromstart_ms(philo->data->prog_start_time), philo->id, msg);
-    pthread_mutex_unlock(&(philo->data->print_mtx));
+    pthread_mutex_lock(&philo->data->print_lock);
+    if (act == EAT)
+        printf(RED "%-8ld %-3d %s\n" RE, gettimefromstart_ms(philo->data->prog_start_time), philo->id, msg);
+    else
+        printf("%-8ld %-3d %s\n", gettimefromstart_ms(philo->data->prog_start_time), philo->id, msg);
+    pthread_mutex_unlock(&(philo->data->print_lock));
 }
 
 long	ft_atol(const char *str)
@@ -72,4 +77,14 @@ int is_digit_loop(char *s)
             return (0);
     }
     return (i);
+}
+
+size_t  ft_strlen(char *s)
+{
+    int i;
+
+    i = -1;
+    while (s[++i])
+        ;
+    return ((size_t)i);
 }

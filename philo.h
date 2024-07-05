@@ -6,7 +6,7 @@
 /*   By: dyarkovs <dyarkovs@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/12 13:59:06 by dyarkovs          #+#    #+#             */
-/*   Updated: 2024/07/03 19:01:32 by dyarkovs         ###   ########.fr       */
+/*   Updated: 2024/07/05 19:18:10 by dyarkovs         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,51 +40,68 @@ typedef enum        s_act
     DIE
 }                   t_act;
 
+typedef struct      s_fork
+{
+    mtx_t           fork;
+    int             id;
+}                   t_fork;
+
+
 typedef struct      s_philosophers
 {
     int             n_philos;
-    t_philo         *philo_arr;
-    mtx_t          *fork_arr;
     long            die_time;
     long            eat_time;
     long            sleep_time;
-    int             n_meals;
-    int             full_philos;
-    bool            is_dead;
+    t_philo         *philos;
+    t_fork          *forks;
+    pthread_t       monitor;
+    mtx_t           print_lock;
+    mtx_t           meal_lock;
+    mtx_t           check_dead_lock;
     long            prog_start_time;
-    mtx_t           print_mtx;
-    mtx_t           check_mtx;
+    bool            stop_prog_flag; //*checked: full all | died 1
 }                   t_philosophers;
 
 typedef struct      s_philo
 {
     pthread_t       thread;
-    mtx_t          *fork1;
-    mtx_t          *fork2;
+    int             fork1_id;
+    int             fork2_id;
     int             id;
-    int             meals_ate;
-    bool            is_full;
+    int             meals_left; //*checked: is full
     long            ate_last_time;
     t_philosophers  *data;
 }                   t_philo;
 
 //utils
-int     err_check(int ac, char **av);
-int     is_digit_loop(char *s);
-long	ft_atol(const char *str);
-void    print_state(t_philo *philo,  t_act act);
-bool    monitor_usleep(int mcs, t_philo *philo);
-bool    check_dead(t_philo *philo);
-bool    check_full(t_philosophers *data);
-long    gettimeofday_in_mcs();
-long    gettimefromstart_ms(long start);
+int     err_check(int ac, char **av); //*
+int     is_digit_loop(char *s); //*
+long	ft_atol(const char *str); //*
+size_t  ft_strlen(char *s); //*
+void    ft_usleep(int mcs); //*
+long    gettimeofday_in_mcs(); //*
+long    gettimefromstart_ms(long start); //*
 
-bool    init_prog(char **av, t_philosophers *data);
-void	init_philos(t_philosophers *data);
-void	create_forks(mtx_t **arr, int n);
-void	create_threads(t_philosophers *data);
-void    *philo_routine(void *philo);
-bool    philo_eat(t_philo *philo);
-bool    philo_sleep(t_philo *philo);
-void    stop_prog(t_philosophers *data);
+void    print_state(t_philo *philo,  t_act act); //*
+
+bool    check_dead(t_philosophers *data); //*
+bool    check_full_all(t_philosophers *data); //*
+// bool    stop_prog(t_philosophers *data); //*
+
+bool    prog(char **av, t_philosophers *data); //*
+void	run_prog(t_philosophers *data, int n_meals); //*
+void    clean_prog(t_philosophers *data); //*
+void	create_forks(t_fork *arr, int n);//*
+void	*monitor_routine(void *data); //*
+void    *philo_routine(void *philo); //*
+void    philo_eat(t_philo *philo); //*
 #endif
+
+
+//*is_full, n_meals, ate_last_time = meal_lock;
+//*stop_prog_flag = check_dead_lock;
+//*print_state = print_lock;
+
+//!understand, why monitor is not working
+//!so they not die or finish when full
