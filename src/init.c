@@ -6,7 +6,7 @@
 /*   By: dyarkovs <dyarkovs@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 13:02:12 by dyarkovs          #+#    #+#             */
-/*   Updated: 2024/07/06 16:49:06 by dyarkovs         ###   ########.fr       */
+/*   Updated: 2024/07/06 17:43:02 by dyarkovs         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,10 +33,10 @@ void	run_prog(t_philosophers *data, int n_meals)
 		data->philos[i].meals_left = n_meals;
 		data->philos[i].data = data;
 		data->philos[i].id = i + 1;
-		if (i == data->n_philos - 1)
+		if (i == 0)
 			assign_forks(&data->philos[i], 1, data->n_philos); //*reverse forks?
 		else
-			assign_forks(&data->philos[i], (i + 2), (i + 1));
+			assign_forks(&data->philos[i], (i), (i + 1));
 	data->philos[i].ate_last_time = gettimeofday_in_mcs();
 	}
 	i = -1;

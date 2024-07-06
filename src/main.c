@@ -6,7 +6,7 @@
 /*   By: dyarkovs <dyarkovs@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/11 11:05:09 by dyarkovs          #+#    #+#             */
-/*   Updated: 2024/07/06 16:52:56 by dyarkovs         ###   ########.fr       */
+/*   Updated: 2024/07/06 17:46:04 by dyarkovs         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,17 +50,19 @@ static void	think(t_philosophers *data)
 {
 	long	to_think;
 
+	(void)data;
 	// to_think = data->eat_time/2 - data->sleep_time;
 	// if (to_think < 0)
 	// 	to_think = 0;
-	if (data->n_philos % 2 == 0)
-	{
-		to_think = data->eat_time/2 - data->sleep_time;
-		if (to_think < 0)
-			to_think = 0;
-	}
-	else
-		to_think = 0;
+	// if (data->n_philos % 2 == 0)
+	// {
+	// 	to_think = data->eat_time/2 - data->sleep_time;
+	// 	if (to_think < 0)
+	// 		to_think = 0;
+	// }
+	// else
+	// 	to_think = 0;
+	to_think = 1000;
 	ft_usleep (to_think);
 }
 
@@ -71,7 +73,7 @@ void	*philo_routine(void *philo)
 
 	p = (t_philo *)philo;
 	run = true;
-	if (p->id % 2 == 1)
+	if (p->id % 2 == 0)
 	{
 		ft_usleep(p->data->eat_time);
 	}
