@@ -27,4 +27,7 @@ fclean: clean
 
 re: fclean all
 
-.PHONY: all clean fclean re
+debug: C_FLAGS += -DDEBUG=1
+debug: all
+
+.PHONY: all clean fclean re debug
