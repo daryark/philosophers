@@ -6,7 +6,7 @@
 /*   By: dyarkovs <dyarkovs@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/12 13:59:06 by dyarkovs          #+#    #+#             */
-/*   Updated: 2024/07/05 19:18:10 by dyarkovs         ###   ########.fr       */
+/*   Updated: 2024/07/06 02:26:51 by dyarkovs         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@
 #define YELLOW "\033[0;33m"
 #define RED "\033[0;31m"
 #define GREEN "\033[0;32m"
+#define MAGENTA "\033[0;35m"
 #define RE  "\033[0m"
 
 // #include "libft.h"

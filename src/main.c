@@ -6,7 +6,7 @@
 /*   By: dyarkovs <dyarkovs@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/11 11:05:09 by dyarkovs          #+#    #+#             */
-/*   Updated: 2024/07/05 18:17:01 by dyarkovs         ###   ########.fr       */
+/*   Updated: 2024/07/06 04:23:29 by dyarkovs         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,23 +17,18 @@ void	*monitor_routine(void *data)
 {
 	t_philosophers *d;
 	bool 			run;
-	int				i;
 
 	d = (t_philosophers *)data;
 	run = true;
-	pthread_mutex_lock(&d->print_lock);
-	printf("monitor\n");
-	pthread_mutex_unlock(&d->print_lock);
 	while (run)
 	{
-		i = -1;
-		pthread_mutex_lock(&d->check_dead_lock);
-		while (++i < d->n_philos)
-		{
-			if (check_dead(d) || check_full_all(d))
-			run = false;
-		}
-		pthread_mutex_unlock(&d->check_dead_lock);
+		// pthread_mutex_lock(&d->print_lock);
+		// printf("monitor ");
+		// pthread_mutex_unlock(&d->print_lock);
+		if (check_dead(d))
+		run = false;
+		if (check_full_all(d))
+		run = false;
 	}
 	return (data);
 }
@@ -50,6 +45,15 @@ void	create_forks(t_fork *arr, int n)
 	}
 }
 
+static void	think(t_philosophers *data)
+{
+	long	to_think;
+
+	to_think = data->eat_time/2 - data->sleep_time;
+	if (to_think < 0)
+		to_think = 0;
+	ft_usleep (to_think);
+}
 
 void	*philo_routine(void *philo)
 {
@@ -59,12 +63,15 @@ void	*philo_routine(void *philo)
 	p = (t_philo *)philo;
 	run = true;
 	if (p->id % 2 == 0)
-		print_state(p, THINK);
+	{
+		think(p->data);
+	}
 	while (run)
 	{
 		philo_eat(p);
 		print_state(p, SLEEP);
 		ft_usleep(p->data->sleep_time);
+		think(p->data);
 		print_state(p, THINK);
 		pthread_mutex_lock(&p->data->check_dead_lock);
 		if (p->data->stop_prog_flag)

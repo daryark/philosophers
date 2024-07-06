@@ -6,7 +6,7 @@
 /*   By: dyarkovs <dyarkovs@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/01 17:43:52 by dyarkovs          #+#    #+#             */
-/*   Updated: 2024/07/05 17:00:01 by dyarkovs         ###   ########.fr       */
+/*   Updated: 2024/07/06 02:55:33 by dyarkovs         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,20 +15,30 @@
 bool    check_dead(t_philosophers *data)
 {
    int  i;
-   long left_mcs;
+   long doesnt_eat_time;
 
    i = -1;
     while (++i < data->n_philos)
     {
         pthread_mutex_lock(&data->meal_lock);
-        left_mcs = gettimeofday_in_mcs() - data->philos[i].ate_last_time;
+        doesnt_eat_time = gettimeofday_in_mcs() - data->philos[i].ate_last_time;
         pthread_mutex_unlock(&data->meal_lock);
-        if (left_mcs < data->eat_time)
+        // pthread_mutex_lock(&data->print_lock);
+        // printf(YELLOW "ch_d:%d  " RE, i);
+        // pthread_mutex_unlock(&data->print_lock);
+        pthread_mutex_lock(&data->check_dead_lock);
+        if (doesnt_eat_time > data->die_time)
         {
             data->stop_prog_flag = true;
+            pthread_mutex_unlock(&data->check_dead_lock);
+            pthread_mutex_lock(&data->print_lock);
+            printf(RED "\ndoesnt_eat_time: %ld, data->die_time: %ld\n" RE, doesnt_eat_time, data->die_time);
+            printf(RED "CHECK_DEAD stop_prog_flag:%d\n" RE, data->stop_prog_flag);
+            pthread_mutex_unlock(&data->print_lock);
             print_state(&data->philos[i], DIE);
             return (true);
         }
+        pthread_mutex_unlock(&data->check_dead_lock);
     }
     return (false);
 }
@@ -43,17 +53,24 @@ bool	check_full_all(t_philosophers *data)
     pthread_mutex_lock(&data->meal_lock);
     if (data->philos[0].meals_left == -1)
         return (pthread_mutex_unlock(&data->meal_lock), false);
+    pthread_mutex_lock(&data->check_dead_lock);
     while (++i < data->n_philos)
     {
+        // pthread_mutex_lock(&data->print_lock);
+        // printf(GREEN "ch_fl:%d " RE, i);
+        // pthread_mutex_unlock(&data->print_lock);
         if (data->philos[i].meals_left == 0)
             n_full++;
     }
     if (n_full == data->n_philos)
     {
         data->stop_prog_flag = true;
-        return (pthread_mutex_unlock(&data->meal_lock), true);
+        pthread_mutex_lock(&data->print_lock);
+        printf(GREEN "CHECK FULL stop_prog_flag:%d, n_full: %d, n_philos: %d\n" RE, data->stop_prog_flag, n_full, data->n_philos);
+        pthread_mutex_unlock(&data->print_lock);
+        return (pthread_mutex_unlock(&data->check_dead_lock), pthread_mutex_unlock(&data->meal_lock), true);
     }
-    return (pthread_mutex_unlock(&data->meal_lock), false);
+    return (pthread_mutex_unlock(&data->check_dead_lock), pthread_mutex_unlock(&data->meal_lock), false);
 }
 
 //check_dead_lock for both: check_dead & check_full fns as both can change stop_prog_flag
