@@ -6,7 +6,7 @@
 /*   By: dyarkovs <dyarkovs@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/12 13:59:06 by dyarkovs          #+#    #+#             */
-/*   Updated: 2024/07/06 02:26:51 by dyarkovs         ###   ########.fr       */
+/*   Updated: 2024/07/06 16:18:33 by dyarkovs         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,11 +20,14 @@
 #include <limits.h>
 #include <stdbool.h>
 #include <sys/time.h>
+#include <errno.h>
 
 #define YELLOW "\033[0;33m"
+#define YELLOW_F "\033[1;33m"
 #define RED "\033[0;31m"
 #define GREEN "\033[0;32m"
 #define MAGENTA "\033[0;35m"
+#define MAGENTA_F "\033[1;35m"
 #define RE  "\033[0m"
 
 // #include "libft.h"
@@ -97,6 +100,8 @@ void	create_forks(t_fork *arr, int n);//*
 void	*monitor_routine(void *data); //*
 void    *philo_routine(void *philo); //*
 void    philo_eat(t_philo *philo); //*
+
+void    safe_mtx(mtx_t *mtx, int id, t_philo *p, char act);
 #endif
 
 

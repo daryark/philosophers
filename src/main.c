@@ -6,7 +6,7 @@
 /*   By: dyarkovs <dyarkovs@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/11 11:05:09 by dyarkovs          #+#    #+#             */
-/*   Updated: 2024/07/06 04:23:29 by dyarkovs         ###   ########.fr       */
+/*   Updated: 2024/07/06 16:52:56 by dyarkovs         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,9 +26,10 @@ void	*monitor_routine(void *data)
 		// printf("monitor ");
 		// pthread_mutex_unlock(&d->print_lock);
 		if (check_dead(d))
-		run = false;
+			run = false;
 		if (check_full_all(d))
-		run = false;
+			run = false;
+		ft_usleep(500);
 	}
 	return (data);
 }
@@ -49,8 +50,16 @@ static void	think(t_philosophers *data)
 {
 	long	to_think;
 
-	to_think = data->eat_time/2 - data->sleep_time;
-	if (to_think < 0)
+	// to_think = data->eat_time/2 - data->sleep_time;
+	// if (to_think < 0)
+	// 	to_think = 0;
+	if (data->n_philos % 2 == 0)
+	{
+		to_think = data->eat_time/2 - data->sleep_time;
+		if (to_think < 0)
+			to_think = 0;
+	}
+	else
 		to_think = 0;
 	ft_usleep (to_think);
 }
@@ -62,9 +71,9 @@ void	*philo_routine(void *philo)
 
 	p = (t_philo *)philo;
 	run = true;
-	if (p->id % 2 == 0)
+	if (p->id % 2 == 1)
 	{
-		think(p->data);
+		ft_usleep(p->data->eat_time);
 	}
 	while (run)
 	{

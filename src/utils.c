@@ -6,7 +6,7 @@
 /*   By: dyarkovs <dyarkovs@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/14 16:12:38 by dyarkovs          #+#    #+#             */
-/*   Updated: 2024/07/06 02:30:58 by dyarkovs         ###   ########.fr       */
+/*   Updated: 2024/07/06 17:01:42 by dyarkovs         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,13 +16,6 @@ void    print_state(t_philo *philo, t_act act)
 {
     char *msg;
 
-    pthread_mutex_lock(&philo->data->check_dead_lock);
-	if (philo->data->stop_prog_flag && act != DIE)
-    {
-        pthread_mutex_unlock(&philo->data->check_dead_lock);
-        return ;
-    }
-	pthread_mutex_unlock(&philo->data->check_dead_lock);
     if (act == DIE)
         msg = "died";
     else if (act == EAT)
@@ -36,6 +29,14 @@ void    print_state(t_philo *philo, t_act act)
     else
         msg = "what the hell r u doin???";
     pthread_mutex_lock(&philo->data->print_lock);
+    pthread_mutex_lock(&philo->data->check_dead_lock);
+	if (philo->data->stop_prog_flag && act != DIE)
+    {
+        pthread_mutex_unlock(&philo->data->check_dead_lock);
+        pthread_mutex_unlock(&philo->data->print_lock);
+        return ;
+    }
+	pthread_mutex_unlock(&philo->data->check_dead_lock);
     printf("%-8ld %-3d %s\n" , gettimefromstart_ms(philo->data->prog_start_time), philo->id, msg);
     pthread_mutex_unlock(&(philo->data->print_lock));
 }

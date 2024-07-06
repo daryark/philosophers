@@ -6,7 +6,7 @@
 /*   By: dyarkovs <dyarkovs@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/01 22:07:26 by dyarkovs          #+#    #+#             */
-/*   Updated: 2024/07/06 04:24:43 by dyarkovs         ###   ########.fr       */
+/*   Updated: 2024/07/06 16:39:51 by dyarkovs         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ long    gettimeofday_in_mcs(void)
 
 long gettimefromstart_ms(long start_mcs)
 {
-    return ((gettimeofday_in_mcs() - start_mcs));
+    return ((gettimeofday_in_mcs() - start_mcs) / 1000);
 }
 
 // bool    monitor_usleep(int mcs, t_philo *philo)
