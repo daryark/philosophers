@@ -6,13 +6,12 @@
 /*   By: dyarkovs <dyarkovs@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 13:02:12 by dyarkovs          #+#    #+#             */
-/*   Updated: 2024/07/06 17:43:02 by dyarkovs         ###   ########.fr       */
+/*   Updated: 2024/07/06 20:32:07 by dyarkovs         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../philo.h"
 
-//*if 1 ONLY philo, both forks will be id = 1, id = 1
 static void	assign_forks(t_philo *philo, int f1, int f2)
 {
 	philo->fork1_id = f1;
@@ -34,26 +33,21 @@ void	run_prog(t_philosophers *data, int n_meals)
 		data->philos[i].data = data;
 		data->philos[i].id = i + 1;
 		if (i == 0)
-			assign_forks(&data->philos[i], 1, data->n_philos); //*reverse forks?
+			assign_forks(&data->philos[i], 1, data->n_philos);
 		else
 			assign_forks(&data->philos[i], (i), (i + 1));
-	data->philos[i].ate_last_time = gettimeofday_in_mcs();
+		data->philos[i].ate_last_time = gettimeofday_in_mcs();
 	}
 	i = -1;
-	// pthread_mutex_lock(&data->print_lock);
-	// pthread_mutex_lock(&data->check_dead_lock);
-	// pthread_mutex_lock(&data->meal_lock);
 	data->prog_start_time = gettimeofday_in_mcs();
 	while (++i < data->n_philos)
-		pthread_create(&data->philos[i].thread, NULL, &philo_routine, &data->philos[i]);
+		pthread_create(&data->philos[i].thread, NULL, &philo_routine,
+			&data->philos[i]);
 	pthread_create(&data->monitor, NULL, &monitor_routine, data);
-	// pthread_mutex_unlock(&data->print_lock);
-	// pthread_mutex_unlock(&data->check_dead_lock);
-	// pthread_mutex_unlock(&data->meal_lock);
 }
 
-bool prog(char **av, t_philosophers *data)
-{	
+bool	prog(char **av, t_philosophers *data)
+{
 	data->n_philos = ft_atol(av[1]);
 	data->die_time = ft_atol(av[2]) * 1000;
 	data->eat_time = ft_atol(av[3]) * 1000;
@@ -72,5 +66,3 @@ bool prog(char **av, t_philosophers *data)
 	clean_prog(data);
 	return (true);
 }
-
-//*decrease meals_left each time philo eats, if it is not -1
